@@ -16,7 +16,7 @@ pipeline {
                 sh 'docker tag javatechie/devops-integration adityayadav75310/devops-adi'
             }
         }
-        stage('Push Image to Docker HUB'){
+        stage('Push Image to the Docker HUB'){
             steps{
                 script{
                     withCredentials([string(credentialsId: 'dockerhubpwd', variable: 'dockerpwd')]) {
