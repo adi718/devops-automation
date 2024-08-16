@@ -1,30 +1,28 @@
 pipeline {
     agent any
-    tools{
-        maven 'maven_3_5_0'
-    }
+        tools{
+            maven 'maven_3_5_0'
+        }
     stages{
         stage('Build Maven'){
             steps{
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Java-Techie-jt/devops-automation']]])
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/adi718/devops-automation']])
                 sh 'mvn clean install'
             }
         }
-        stage('Build docker image'){
+        stage('Build Docker Image'){
             steps{
-                script{
-                    sh 'docker build -t javatechie/devops-integration .'
-                }
+                sh 'docker build -t javatechie/devops-integration .'
+                sh 'docker tag javatechie/devops-integration adityayadav75310/devops-adi'
             }
         }
-        stage('Push image to Hub'){
+        stage('Push Image to Docker HUB'){
             steps{
                 script{
-                   withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhubpwd')]) {
-                   sh 'docker login -u javatechie -p ${dockerhubpwd}'
-
+                    withCredentials([string(credentialsId: 'dockerhubpwd', variable: 'dockerpwd')]) {
+                    sh 'docker login -u adityayadav75310 -p ${dockerpwd}'
 }
-                   sh 'docker push javatechie/devops-integration'
+                    sh 'docker push adityayadav75310/devops-adi'
                 }
             }
         }
